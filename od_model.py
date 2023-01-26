@@ -5,17 +5,15 @@ from matplotlib import pyplot as plt
 
 G = nx.DiGraph(nx.complete_graph(3))
 
-
-
 #params
-c = float
-h = float
-a = float
-theta_h = float
-theta_a = float
-n = int
-x = float
-j = []
+# c = float
+# h = float
+# a = float
+# theta_h = float
+# theta_a = float
+# n = int
+# x = float
+# j = []
 #n -> nodes 
 #w -> weights 
 
@@ -28,16 +26,18 @@ def get_opinion_state(node):
     opinion_state = nx.get_node_attributes(G, "opinion_state")
     return opinion_state[node]
 
-def set_weight(node,j,w):
-    G[node][j]["weight"]= w
+def set_weight(j,node,w):
+    G[j][node]["weight"]= w
 
 def update_opinion_state(conformity,node,epsilon):
     x_i = (conformity * (avg_neighbourhood(node) - get_opinion_state(node))) + epsilon
     return x_i
 
-def update_weight(homophily,novelity,node,t_h,t_a,xj):
-    w_ij = (homophily * calculate_fh(t_h,node,xj)) + (novelity * calculate_fa(t_a,node,xj))
-    return w_ij
+def update_weight(homophily,novelity,node,t_h,t_a):
+    j = [n for n in G.neighbors(node)] #returns an array of the node's neighbors
+    for i in range (len(j)):
+        w_ij = (homophily * calculate_fh(t_h,node,G.nodes[j[i]]["opinion_state"])) + (novelity * calculate_fa(t_a,node,G.nodes[j[i]]["opinion_state"]))
+        set_weight(j[i],node,w_ij)
 
 def calculate_fh(t_h,node,xj):
     fh = t_h - abs(node - xj)
@@ -71,7 +71,7 @@ def main():
 
     for n_i,n_j in G.edges():
         w_n = np.random.uniform(0.0, np.nextafter(1,2)) # weights
-        set_weight(n_i,n_j,w_n)
+        set_weight(n_j,n_i,w_n)
        
     # set_weight(0,1,3)
     # set_weight(1,0,1)
@@ -84,22 +84,21 @@ def main():
         e = np.random.normal(0,0.1)
         for n in list(G):
             update_opinion_state(0.3,n,e)
+            update_weight(0.5,0.1,n,0.2,0.4)
+        
         
            
-    #print(get_opinion_state(0))
-
-
-  
+    #print(get_opinion_state(0))  
 
 if __name__ == "__main__":
     main()
-#pos = nx.spring_layout(G)
+pos = nx.spring_layout(G)
 
-#node_labels= nx.get_node_attributes(G,"opinion_state")
-#edge_lables= nx.get_edge_attributes(G,"weight")
+node_labels= nx.get_node_attributes(G,"opinion_state")
+edge_lables= nx.get_edge_attributes(G,"weight")
 
-# nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_lables)
-# nx.draw_networkx_labels(G,pos,labels=node_labels)
-# nx.draw_networkx(G)
+nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_lables)
+nx.draw_networkx_labels(G,pos,labels=node_labels)
+nx.draw_networkx(G)
 # plt.margins(0.01)
-# plt.show()
+plt.show()
