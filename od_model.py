@@ -31,7 +31,7 @@ def set_weight(j,node,w):
 
 def update_opinion_state(conformity,node,epsilon):
     x_i = (conformity * (avg_neighbourhood(node) - get_opinion_state(node))) + epsilon
-    return x_i
+    set_opinion_state(node,x_i)
 
 def update_weight(homophily,novelity,node,t_h,t_a):
     j = [n for n in G.neighbors(node)] #returns an array of the node's neighbors
@@ -80,11 +80,14 @@ def main():
     # print(G[2][0]["weight"])
     # print(G.nodes(data=True))
     # print(avg_neighbourhood(0))
+    print("start",G.nodes(data=True))
     for t in range (0,100):
         e = np.random.normal(0,0.1)
         for n in list(G):
             update_opinion_state(0.3,n,e)
             update_weight(0.5,0.1,n,0.2,0.4)
+            print("in the loop",G.nodes(data=True))
+    print("end",G.nodes(data=True))
         
         
            
@@ -92,13 +95,13 @@ def main():
 
 if __name__ == "__main__":
     main()
-pos = nx.spring_layout(G)
+# pos = nx.spring_layout(G)
 
-node_labels= nx.get_node_attributes(G,"opinion_state")
-edge_lables= nx.get_edge_attributes(G,"weight")
+# node_labels= nx.get_node_attributes(G,"opinion_state")
+# edge_lables= nx.get_edge_attributes(G,"weight")
 
-nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_lables)
-nx.draw_networkx_labels(G,pos,labels=node_labels)
-nx.draw_networkx(G)
-# plt.margins(0.01)
-plt.show()
+# nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_lables)
+# nx.draw_networkx_labels(G,pos,labels=node_labels)
+# nx.draw_networkx(G)
+# # plt.margins(0.01)
+# plt.show()
