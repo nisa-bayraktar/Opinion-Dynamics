@@ -3,105 +3,77 @@ import networkx as nx
 import numpy as np
 from matplotlib import pyplot as plt
 
-G = nx.DiGraph(nx.complete_graph(3))
+# import louvain-community ?? 
 
-#params
-# c = float
-# h = float
-# a = float
-# theta_h = float
-# theta_a = float
-# n = int
-# x = float
-# j = []
-#n -> nodes 
-#w -> weights 
+dt = 0.1
+conformity = 0.01
+novelty = 0.01
+homophily = 0.3
+t_h = 0.01
+t_a = 0.03
 
-#helper functions
 
-def set_opinion_state(node,x):
-     G.nodes[node]["opinion_state"] = x
+G = nx.DiGraph(nx.complete_graph(100))
 
-def get_opinion_state(node):
+
+
+def update_opinion_state(node,epsilon):
     opinion_state = nx.get_node_attributes(G, "opinion_state")
-    return opinion_state[node]
+    x_i = opinion_state[node]
+    x_i += (conformity * (avg_neighbourhood(node) - x_i)) * dt
+    x_i += epsilon
+    G.nodes[node]["opinion_state"] = x_i
+   
 
-def set_weight(j,node,w):
-    G[j][node]["weight"]= w
+def update_weight(node):
+    for i in G.neighbors(node):
+        w_ij = (homophily * (t_h - abs(G.nodes[node]["opinion_state"] - G.nodes[i]["opinion_state"]))) + (novelty * (abs(avg_neighbourhood(node)- G.nodes[i]["opinion_state"]) - t_a))  * dt
+        G[i][node]["weight"] += w_ij
 
-def update_opinion_state(conformity,node,epsilon):
-    x_i = (conformity * (avg_neighbourhood(node) - get_opinion_state(node))) + epsilon
-    set_opinion_state(node,x_i)
-
-def update_weight(homophily,novelity,node,t_h,t_a):
-    j = [n for n in G.neighbors(node)] #returns an array of the node's neighbors
-    for i in range (len(j)):
-        w_ij = (homophily * calculate_fh(t_h,node,G.nodes[j[i]]["opinion_state"])) + (novelity * calculate_fa(t_a,node,G.nodes[j[i]]["opinion_state"]))
-        set_weight(j[i],node,w_ij)
-
-def calculate_fh(t_h,node,xj):
-    fh = t_h - abs(node - xj)
-    return fh
-
-def calculate_fa(t_a,node,xj):
-    fa = abs(avg_neighbourhood(node)-xj) - t_a
-    return fa
 
 def avg_neighbourhood(node):
-    s1_arr = []
-    s2_arr = []
-    j = [n for n in G.neighbors(node)] #returns an array of the node's neighbors
-    for i in range (len(j)):
-        j_s = G.nodes[j[i]]["opinion_state"]
-        w_ij = G[j[i]][node]["weight"] # weight from node j(adj) to node i(source)
-        m = (w_ij * j_s)
-        s1_arr.append(m)
-        s2_arr.append(w_ij)
+    sum1 = 0
+    sum2 = 0
+    for j in G.neighbors(node):
+        sum1 += G.nodes[j]["opinion_state"] * G[j][node]["weight"]
+        sum2 += G[j][node]["weight"]
 
-    s1 = sum(s1_arr)
-    s2 = sum(s2_arr)
-    avg = s1 / s2
+    avg = sum1 / sum2 # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
     return avg
 
+
 def main():
-    
+
     for n in list(G):
         x_s = np.random.standard_normal() #opinion state
-        set_opinion_state(n,x_s)
+        G.nodes[n]["opinion_state"] = x_s
 
     for n_i,n_j in G.edges():
         w_n = np.random.uniform(0.0, np.nextafter(1,2)) # weights
-        set_weight(n_j,n_i,w_n)
-       
-    # set_weight(0,1,3)
-    # set_weight(1,0,1)
+        G[n_j][n_i]["weight"]= w_n
+   
  
-    # print(G[1][0]["weight"])
-    # print(G[2][0]["weight"])
-    # print(G.nodes(data=True))
-    # print(avg_neighbourhood(0))
-    print("start",G.nodes(data=True))
-    for t in range (0,100):
-        e = np.random.normal(0,0.1)
+    for t in range (0,101): 
+        
         for n in list(G):
-            update_opinion_state(0.3,n,e)
-            update_weight(0.5,0.1,n,0.2,0.4)
-            print("in the loop",G.nodes(data=True))
-    print("end",G.nodes(data=True))
-        
-        
-           
-    #print(get_opinion_state(0))  
+            e = np.random.normal(0,0.1)
+            update_opinion_state(n,e)
+            update_weight(node=n)
+        if t % 10 == 0:
+            visualize_graph(G)
+            # input("hit enter to continue")  
+        print(t)      
+  
+
+
+def visualize_graph(graph):
+    node_colours = [graph.nodes[i]["opinion_state"] for i in list(G)]
+    nx.draw_networkx(graph,node_color=node_colours)
+    plt.draw()
+    plt.show()
+    # input("hit enter to continue")
+    # plt.close()
 
 if __name__ == "__main__":
     main()
-# pos = nx.spring_layout(G)
 
-# node_labels= nx.get_node_attributes(G,"opinion_state")
-# edge_lables= nx.get_edge_attributes(G,"weight")
-
-# nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_lables)
-# nx.draw_networkx_labels(G,pos,labels=node_labels)
-# nx.draw_networkx(G)
-# # plt.margins(0.01)
-# plt.show()
