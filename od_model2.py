@@ -3,18 +3,19 @@ import networkx as nx
 import numpy as np
 from matplotlib import pyplot as plt
 import networkx.algorithms.community as nx_comm
+import csv
+import os.path
+from itertools import combinations_with_replacement 
+  
 
 dt = 0.1
-conformity = 0.01 #0.3 
-homophily = 0.3 #0.01
-novelty = 0.01 #0.3
-t_h = 0.01 #0.3
+conformity = 0.01 #0.3 #  
+homophily = 0.01 #0.01 # 
+novelty = 0.01 #0.3 # 
+t_h = 0.01 #0.3 #
 t_a = 0.03
-new_opinion_state = []
-
 
 G = nx.DiGraph(nx.complete_graph(100))
-
 
 def main():
 
@@ -29,14 +30,16 @@ def main():
     
     # t iterations
     for t in range (0,100): 
-        
-        for node in G.nodes():
+
+        new_opinion_state = []
+
+        for node in list(G):
             epsilon = np.random.normal(0,0.1)
 
             # calculate the average neighbourhood of the node
             if G.neighbors(node) == []: # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
-                avg = 0
-            
+                 avg = 0
+                    
             else:
                 sum1 = 0
                 sum2 = 0
@@ -44,50 +47,96 @@ def main():
                     sum1 += G.nodes[j]["opinion_state"] * G[j][node]["weight"]
                     sum2 += G[j][node]["weight"]
                 avg = sum1 / sum2 
-
+           
             #calculate the node's new opinion state
             x_i = G.nodes[node]["opinion_state"]
-            x_i += (conformity * (avg - x_i)) * dt
+            x_i += (conformity * (avg - x_i))  * dt
             x_i += epsilon
             new_opinion_state.append(x_i)
-
+          
             #update the node's weight from its neighbourhood
             for j in G.neighbors(node):
                 w_ij = G[j][node]["weight"]
                 w_ij += ((homophily * (t_h - abs(G.nodes[node]["opinion_state"] - G.nodes[j]["opinion_state"]))) + (novelty * (abs(avg - G.nodes[j]["opinion_state"]) - t_a)))  * dt
                 G[j][node]["weight"] = w_ij
-            
+
+        #if new_opinion_state != []:
         #update the node's opinion state
-        for node in G.nodes():
+        for node in list(G):
             G.nodes[node]["opinion_state"] = new_opinion_state[node]
-                          
+                       
         # if t % 10 == 0:
-        #      visualize_graph(G)
-        # if t == 99:
-        #     UG = G.to_undirected()
-        #     for node in G.nodes():
-        #         for neighbour in G.neighbors(node):
-        #                 UG.edges[node, neighbour]["weight"] = (
-        #                     (G.edges[node, neighbour]["weight"] + G.edges[neighbour, node]["weight"])/2
-        #                 )
-        #     visualize_graph(UG)
+        #     visualize_graph(G)
+       
+    UG = G.to_undirected()
+    for node in list(G):
+        for neighbour in G.neighbors(node):
+                UG.edges[node, neighbour]["weight"] = (
+                    (G.edges[node, neighbour]["weight"] + G.edges[neighbour, node]["weight"])/2
+                )
+    #visualize_graph(UG)
+
+    #calculate the average weight of all edges
+    s = sum(UG.edges[node, neighbour]["weight"] for node, neighbour in UG.edges)
+    avg_weight = s / len(UG.edges)
+    #print(avg_weight)
+  
+    #find the communities of the graph
     a=nx_comm.louvain_communities(G)
-    print(a)
-    print(len(a))
-                        
-            
-            # input("hit enter to continue")  
-            
+
+    #number of communities
+    n_communities = len(a)
+    
+    #calculate the modularity of the community
+    modularity = nx_comm.modularity(UG,a)
+    #print (modularity)
+
+    sum_opinion_state = 0
+    std_dev = 0
+    average_opinion_states = []
+    for i in range (len(a)):
+        for k in a[i]:
+            #calculate the average opinion state of communities
+            sum_opinion_state += UG.nodes[k]["opinion_state"]
+        average_opinion_state = sum_opinion_state / len(a[i])
+        average_opinion_states.append(average_opinion_state)
+
+        #calculate the standard deviation of community states
+        std_dev += (UG.nodes[k]["opinion_state"] - average_opinion_state)**2
+        std_dev = std_dev / len(a[i])
         
+    #calcuate the range of opinion states
+    range_community = max(average_opinion_states) - min(average_opinion_states)
+    #print(range_community)
+    
+    
+    dict_data = {'avg_weight': avg_weight, 'std_dev':std_dev, 'average_os': average_opinion_state, 'range_community': range_community, 'n_communities': n_communities,'modularity': modularity}
+    file_exists = os.path.isfile('output.csv')
+
+    with open('output.csv', mode='a') as csv_file:
+    
+        fieldnames = ['avg_weight', 'std_dev', 'average_os', 'range_community', 'n_communities','modularity']
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader() 
+        writer.writerow(dict_data)
+        
+        csv_file.close()
+
+
+  
 
 
 def visualize_graph(graph):
-    node_colours = [graph.nodes[i]["opinion_state"] for i in G.nodes()]
-    nx.draw_networkx(graph,node_color=node_colours)
+    edge_colours = [graph[u][v]['weight'] for u,v in graph.edges()]
+    node_colours = [graph.nodes[i]["opinion_state"] for i in list(graph)]
+    nx.draw_networkx(graph,node_color=node_colours,edge_cmap =plt.cm.Greys,edge_color=edge_colours)
     plt.draw()
     plt.show()
     # input("hit enter to continue")
     # plt.close()
+
+
 
 if __name__ == "__main__":
     main()
