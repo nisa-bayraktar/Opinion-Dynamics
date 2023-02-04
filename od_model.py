@@ -53,7 +53,7 @@ def main():
         G[n_j][n_i]["weight"]= w_n
    
  
-    for t in range (0,101): 
+    for t in range (0,100): 
         
         for n in list(G):
             e = np.random.normal(0,0.1)
