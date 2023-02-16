@@ -163,60 +163,115 @@ def main_asynch():
     for n_i,n_j in G.edges():
         #print('setting weighjt', n_i, n_j)
         w_n = np.random.uniform(0.0, np.nextafter(1,2)) # weights - WHAT ABOUT WEIGHT (5,5)?
-        G[n_j][n_i]["weight"]= w_n
+        G[n_i][n_j]["weight"]= w_n
 
-    #parameters = [0, 0, 0, 0, 0]
-    
+    sum_opinion_state = 0
+    std_dev = 0
+    average_opinion_states = []
+   
+    max_edge_weight = 0
+    min_edge_weight = 0
 
-    # for combination in itertools.product(*[values for i in range(len(parameters))]):
-    #         parameters = combination
+   
+    for t in range (0,101): 
+
+        nodes = list(G.nodes())
         
-    #         conformity = parameters[0]
-    #         homophily = parameters[1]
-    #         novelty = parameters[2]
-    #         t_h = parameters[3]
-    #         t_a = parameters[4]
-    #         #print(conformity)
-      
-    
-            # t iterations
-    for t in range (0,100): 
-
-        
-        nodes = list(G)
         np.random.shuffle(nodes)
 
         for node in nodes:
-            epsilon = np.random.normal(0,0.1)
+            neighbours = list(G.neighbors(node))
+            
             
             # calculate the average neighbourhood of the node
-            if list(G.neighbors(node)) != []: # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
-                sum1 = 0
-                sum2 = 0
-                for j in G.neighbors(node):
-                    sum1 += G.nodes[j]["opinion_state"] * G[node][j]["weight"]
-                    sum2 += G[node][j]["weight"]
+            if len(neighbours)>0: # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
+                sum2 = sum(G[j][node]["weight"]for j in neighbours )
+            
                 if sum2>0:
-                    avg = sum1 / sum2 
+                    avg = sum(G[j][node]["weight"] * G.nodes[j]['opinion_state'] for j in neighbours) / sum2
         
                     #calculate the node's new opinion state
-                    G.nodes[node]["opinion_state"] += (conformity * (avg - G.nodes[node]["opinion_state"]))  * dt
+                    G.nodes[node]["opinion_state"] += conformity * (avg - G.nodes[node]["opinion_state"])  * dt
         
                 #update the node's weight from its neighbourhood
-                for j in G.neighbors(node):
-                    G[node][j]["weight"] += (homophily * (t_h - abs(G.nodes[node]["opinion_state"] - G.nodes[j]["opinion_state"])))  * dt
+                for j in neighbours:
+                    diff = abs(G.nodes[node]["opinion_state"] - G.nodes[j]["opinion_state"])
+                    G[j][node]["weight"] += homophily * (t_h - diff)  * dt
                     if sum2>0:
-                        G[node][j]["weight"] += (novelty * (abs(avg - G.nodes[j]["opinion_state"]) - t_a)) * dt
+                        diff = abs(avg - G.nodes[j]["opinion_state"])
+                        G[j][node]["weight"] += novelty * (diff - t_a) * dt
 
-                    
-                    if G[node][j]["weight"] < 0:
-                        G[node][j]["weight"] =0
+            
+                    if G[j][node]["weight"] < 0:
+                        G[j][node]["weight"] =0
+            G.nodes[node]["opinion_state"] += np.random.normal(0,0.1)
+        
 
-            G.nodes[node]["opinion_state"] += epsilon
+            
+
+            
+
+    UG = G.to_undirected()
+
+    for node in G.nodes:
+        for neighbour in G.neighbors(node):
+    
+            UG[neighbour][node]["weight"] = (
+                (G[node][neighbour]["weight"] + G[neighbour][node]["weight"])/2
+            )
+            # if G[node][neighbour]["weight"] > max_edge_weight:
+            #     max_edge_weight = G[node][neighbour]["weight"] 
+            # if G[node][neighbour]["weight"]  < min_edge_weight:
+            #     min_edge_weight = G[node][neighbour]["weight"] 
+    
+
+    #visualize_graph(UG)
+
+    #calculate the average weight of all edges
+    # s = 0
+    # max_edge_weight = 0
+    # min_edge_weight = 0
+    
+    s2 = sum(UG[node] [neighbour]["weight"] for node, neighbour in list(UG.edges))
+    avg_weight = s2 / len(list(UG.edges))
+   
+    if avg_weight > max_edge_weight:
+        max_edge_weight = avg_weight
+    if avg_weight < min_edge_weight:
+        min_edge_weight = avg_weight
+    
+
+    #find the communities of the graph
+    a=nx_comm.louvain_communities(UG)
+
+    #number of communities
+    n_communities = len(a)
+        
+    #calculate the modularity of the community
+    modularity = nx_comm.modularity(UG,a)
+    #print (modularity)
+    # sum_opinion_state = 0
+    # std_dev = 0
+    # average_opinion_states = []
+    for i in range (len(a)):
+        for k in a[i]:
+            #calculate the average opinion state of communities
+            sum_opinion_state += UG.nodes[k]["opinion_state"]
+        average_opinion_state = sum_opinion_state / len(a[i])
+        average_opinion_states.append(average_opinion_state)
+
+        #calculate the standard deviation of community states
+        std_dev += (UG.nodes[k]["opinion_state"] - average_opinion_state)**2
+        std_dev = std_dev / len(a[i])
+            
+    #calcuate the range of opinion states
+    range_community = max(average_opinion_states) - min(average_opinion_states)
+
+    print(min_edge_weight,max_edge_weight)
 
                 
-        if (t+1) % 50 == 0:
-                visualize_graph(G)
+        # if (t+1) % 50 == 0:
+        #         visualize_graph(G)
 # print(t)
         
         
@@ -276,6 +331,7 @@ def main_asynch():
             #         writer.writerow(dict_data)
                     
             #         csv_file.close()
+    #print(min_edge_weight,max_edge_weight)
 
 def visualize_graph(graph):
     edge_colours = [graph[u][v]['weight'] for u,v in graph.edges()]
@@ -292,9 +348,9 @@ def test():
         lst.append(i)
 
 if __name__ == "__main__":
-    main_synch()
-    visualize_graph(G)
+    main_asynch()
+    #visualize_graph(G)
 
     # For Python>=3.5 one can also write:
-    print(timeit.timeit("test()", globals=locals()))
+    #print(timeit.timeit("test()", globals=locals()))
 
