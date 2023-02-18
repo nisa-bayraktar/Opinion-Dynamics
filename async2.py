@@ -9,7 +9,6 @@ import timeit
 import itertools
 
 
-
 dt = 0.1
 conformity = 0 
 homophily = 0
@@ -32,15 +31,15 @@ def main_asynch():
 
     for combination in itertools.product(*[values for i in range(len(parameters))]):
 
-            #random initializations
-        for n in list(G.nodes()):
+        #random initializations
+        for n in G.nodes():
             x_s = np.random.standard_normal() #opinion state
             G.nodes[n]["opinion_state"] = x_s
 
-            for j in list(G.neighbors(n)):
-                #print('setting weighjt', n_i, n_j)
-                w_n = np.random.uniform(0.0, np.nextafter(1,2)) # weights - WHAT ABOUT WEIGHT (5,5)?
-                G[j][n]["weight"]= w_n
+        for n_i,n_j in G.edges():
+            #print('setting weighjt', n_i, n_j)
+            w_n = np.random.uniform(0.0, np.nextafter(1,2)) # weights - WHAT ABOUT WEIGHT (5,5)?
+            G[n_i][n_j]["weight"]= w_n
 
         parameters = combination
     
@@ -60,17 +59,20 @@ def main_asynch():
             for node in nodes:
                 neighbours = list(G.neighbors(node))
                 epsilon = np.random.normal(0,0.1)
-                
+
+                 
                 # calculate the average neighbourhood of the node
-                if len(neighbours)>0: # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
-                    
-                    
-                    sum2 = sum(G[node][j]["weight"]for j in neighbours)
+                if neighbours != []: # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
+                    sum1 = 0
+                    sum2 = 0
+                    for j in neighbours:
+                        sum1 += G.nodes[j]["opinion_state"] * G[node][j]["weight"]
+                        sum2 += G[node][j]["weight"]
                     if sum2>0:
-                        avg = sum(G.nodes[j]["opinion_state"] * G[node][j]["weight"] for j in neighbours) / sum2
+                        avg = sum1 / sum2 
             
                         #calculate the node's new opinion state
-                        G.nodes[node]["opinion_state"] += conformity * (avg - G.nodes[node]["opinion_state"])  * dt
+                        G.nodes[node]["opinion_state"] += (conformity * (avg - G.nodes[node]["opinion_state"]))  * dt
             
                     #update the node's weight from its neighbourhood
                     for j in neighbours:
@@ -96,7 +98,12 @@ def main_asynch():
                 UG.edges[node, neighbour]["weight"] = (
                         (G.edges[node, neighbour]["weight"] + G.edges[neighbour, node]["weight"])/2
                     )
+        # for node, neighbour in UG.edges():
+        #         if  UG[node][neighbour]["weight"] < 0:
+        #             UG[node][neighbour]["weight"] = 0
     
+                
+            #visualize_graph(UG)
 
         #calculate the average weight of all edges
         s = sum(UG.edges[node, neighbour]["weight"] for node, neighbour in UG.edges)
@@ -110,15 +117,13 @@ def main_asynch():
 
         #find the communities of the graph
         a=nx_comm.louvain_communities(UG)
-      
-        
 
         #number of communities
         n_communities = len(a)
             
         #calculate the modularity of the community
         modularity = nx_comm.modularity(UG,a)
-      
+        #print (modularity)
         average_opinion_states = []
         for i in range (len(a)):
             sum_opinion_state = 0
@@ -135,15 +140,16 @@ def main_asynch():
       
         std_dev = np.std(average_opinion_states)
                 
+                
         #calcuate the range of opinion states
         range_community = max(average_opinion_states) - min(average_opinion_states)
-       
+            #print(range_community)
             
 
         dict_data = {'h_values':homophily,'a_values':novelty,'c_values': conformity,'th_values':t_h,'ta_values':t_a,'avg_weight': avg_weight, 'std_of_avg_comm_state':std_dev,  'range_of_comm_state': range_community, 'number_of_comm': n_communities,'modularity': modularity}
-        file_exists = os.path.isfile('async.csv')
+        file_exists = os.path.isfile('async2.csv')
 
-        with open('async.csv', mode='a') as csv_file:
+        with open('async2.csv', mode='a') as csv_file:
             
                 fieldnames = ['h_values','a_values','c_values','th_values','ta_values','avg_weight', 'std_of_avg_comm_state', 'range_of_comm_state', 'number_of_comm','modularity']
                 writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -151,7 +157,6 @@ def main_asynch():
                     writer.writeheader() 
                 writer.writerow(dict_data)
                 
-        #         csv_file.close()
 
     print(min_edge_weight,max_edge_weight)
 
