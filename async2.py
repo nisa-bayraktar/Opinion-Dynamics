@@ -171,5 +171,5 @@ if __name__ == "__main__":
     #visualize_graph(G)
 
     # For Python>=3.5 one can also write:
-    print(timeit.timeit("test()", globals=locals()))
+    #print(timeit.timeit("test()", globals=locals()))
 
