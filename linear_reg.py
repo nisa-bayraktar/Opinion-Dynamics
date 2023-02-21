@@ -60,14 +60,22 @@ def set_avg(X):
     # y_modularity = avg['modularity']
 
 
-y_values = ['avg_weight', 'std_of_avg_comm_state', 'range_of_comm_state', 'number_of_comm', 'modularity']
+y_values = ['avg_weight', 'number_of_comm','modularity','range_of_comm_state','std_of_avg_comm_state']
 
 
-fig, axs = plt.subplots(len(X_values), len(y_values),figsize=(18,10))
+fig, axs = plt.subplots(len(X_values), len(y_values),figsize=(10,12))
 
-for i, X in enumerate(X_values):
+# set labels for y axis
+for ax, y in zip(axs[:,0], y_values):
+    ax.set_ylabel(y, fontsize=10)
+
+# set labels for x axis
+for ax, X in zip(axs[-1], X_values):
+    ax.set_xlabel(X.name, fontsize=10)
+
+for j, X in enumerate(X_values):
     set_avg(X)
-    for j, y in enumerate(y_values):
+    for i, y in enumerate(y_values):
         slope, intercept, r_value, p_value, std_err = linregress(X, avg[y])
         if p_value < 0.00001:
             y_pred = slope * X + intercept
@@ -83,8 +91,9 @@ for i, X in enumerate(X_values):
             axs[i,j].set_xticks([0.01, 0.03, 0.1, 0.3])
             axs[i,j].set_xticklabels([0.01, 0.03, 0.1, 0.3])
             #axs[i,j].set_title(f'{X.name}, {y}, p>=0.00001')
+     
 plt.tight_layout()
-plt.savefig('myplot.png')
+plt.savefig('linear_reg.png')
 
 
 # plt.show()
