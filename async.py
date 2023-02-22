@@ -22,7 +22,7 @@ values = [0.01,0.03,0.1,0.3]
 
 def main_asynch():
 
-    G = nx.DiGraph(nx.complete_graph(100))
+    G = nx.DiGraph(nx.complete_graph(1000))
 
     max_edge_weight = 0
     min_edge_weight = 0
@@ -141,9 +141,9 @@ def main_asynch():
             
 
         dict_data = {'h_values':homophily,'a_values':novelty,'c_values': conformity,'th_values':t_h,'ta_values':t_a,'avg_weight': avg_weight, 'std_of_avg_comm_state':std_dev,  'range_of_comm_state': range_community, 'number_of_comm': n_communities,'modularity': modularity}
-        file_exists = os.path.isfile('async.csv')
+        file_exists = os.path.isfile('async_1000.csv')
 
-        with open('async.csv', mode='a') as csv_file:
+        with open('async_1000.csv', mode='a') as csv_file:
             
                 fieldnames = ['h_values','a_values','c_values','th_values','ta_values','avg_weight', 'std_of_avg_comm_state', 'range_of_comm_state', 'number_of_comm','modularity']
                 writer = csv.DictWriter(csv_file, fieldnames=fieldnames)

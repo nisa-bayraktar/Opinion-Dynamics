@@ -53,12 +53,7 @@ def set_avg(X):
     else:
         avg = avg_ta
 
-    # y_avg_weight = avg['number_of_comm']
-    # y_std_of_avg_comm_state = avg['std_of_avg_comm_state']
-    # y_range_of_comm_state = avg['range_of_comm_state']
-    # y_number_of_comm = avg['number_of_comm']
-    # y_modularity = avg['modularity']
-
+   
 
 y_values = ['avg_weight', 'number_of_comm','modularity','range_of_comm_state','std_of_avg_comm_state']
 
@@ -84,87 +79,21 @@ for j, X in enumerate(X_values):
             axs[i,j].set_xscale("log")
             axs[i,j].set_xticks([0.01, 0.03, 0.1, 0.3])
             axs[i,j].set_xticklabels([0.01, 0.03, 0.1, 0.3])
-            #axs[i,j].set_title(f'{X.name}, {y}, p<0.00001')
+            axs[i,j].text(0.95, 0.95, 'p < 0.00001', transform=axs[i,j].transAxes,
+                          verticalalignment='top', horizontalalignment='right',
+                          fontsize=8, color='black')
+            
         else:
             axs[i,j].scatter(X, avg[y], color='blue', alpha=0.02)
             axs[i,j].set_xscale("log")
             axs[i,j].set_xticks([0.01, 0.03, 0.1, 0.3])
             axs[i,j].set_xticklabels([0.01, 0.03, 0.1, 0.3])
-            #axs[i,j].set_title(f'{X.name}, {y}, p>=0.00001')
+            axs[i,j].text(0.95, 0.95, 'p < 0.00001', transform=axs[i,j].transAxes,
+                          verticalalignment='top', horizontalalignment='right',
+                          fontsize=8, color='black')
+           
      
 plt.tight_layout()
 plt.savefig('linear_reg.png')
 
 
-# plt.show()
-
-# for X in X_values:
-#         set_avg(X)
-#         for y in y_values:
-            
-
-#                 slope, intercept, r_value, p_value, std_err = linregress(X,y)
-
-#                 # Check if the p-value is statistically significant (i.e., less than 0.05)
-#                 if p_value < 0.00001:
-
-#                     # Calculate predicted y-values based on the regression parameters
-#                     y_pred = slope * X + intercept
-
-#                     # Plot the data points and the regression line
-#                     plt.scatter(X, y, color='blue',alpha=0.02)
-#                     plt.plot(X, y_pred, color='red')
-
-#                     # Add a legend and title
-#                     plt.title('p<0.00001')
-
-#                     plt.xscale("log")
-#                     x_ticks = [0.01,0.03,0.1,0.3]
-#                     plt.xticks(x_ticks,x_ticks)
-                   
-
-    
-    
-
-#                 else:
-#                     plt.scatter(X, y, color='blue',alpha=0.02)
-                
-#                     plt.xscale("log")
-#                     x_ticks = [0.01,0.03,0.1,0.3]
-#                     plt.xticks(x_ticks,x_ticks)
-#                 plt.show()
-
-
-
-
-
-# slope, intercept, r_value, p_value, std_err = linregress(X_a,y_avg_weight)
-
-# # Check if the p-value is statistically significant (i.e., less than 0.05)
-# if p_value < 0.00001:
-
-#     # Calculate predicted y-values based on the regression parameters
-#     y_pred = slope * X_a + intercept
-#     print("y_pred:", y_pred)
-    
-
-#     plt.plot(X_a, y_pred, color='red')
-#     # Plot the data points and the regression line
-#     plt.scatter(X_a, y_avg_weight, color='blue',alpha=0.02)
-#     plt.xscale("log")
-#     #plt.plot(X_a, y_pred, color='red')
-    
-#     x_ticks = [0.01,0.03,0.1,0.3]
-#     plt.xticks(x_ticks,x_ticks)
-    
-
-#     # Add a legend and title
-#     plt.title('p<0.00001')
-
-
-# else:
-#     plt.scatter(X_a, y_avg_weight, color='blue',alpha=0.02)
-
-#     plt.xscale("log",base=2)
-#     x_ticks = [0.01,0.03,0.1,0.3]
-#     plt.xticks(x_ticks,x_ticks)
