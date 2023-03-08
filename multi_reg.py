@@ -73,12 +73,12 @@ min_values = coef_table.iloc[:6].min()
 print(max_values,min_values)
 print(coef_table)
 
-fig, ax = plt.subplots(figsize=(15,10))
+fig, ax = plt.subplots(figsize=(10,5))
 ax.axis('off')
 ax.axis('tight')
 
-table=ax.table(cellText=coef_table_c.values, colLabels=coef_table_c.columns, rowLabels=coef_table_c.index, loc='center')
-fontsize = 14
+table=ax.table(cellText=coef_table_c.values, colLabels=coef_table_c.columns, cellLoc='center',rowLabels=coef_table_c.index, loc='center')
+fontsize = 12
 table.set_fontsize(fontsize)
 
 # Set the color of the text in the cells
@@ -93,19 +93,3 @@ for j in range(1, coef_table_c.shape[0] +1):
 table.scale(1, 1)
 plt.show()
     
-# save the plot as a PNG file
-#plt.savefig('coefficient_table2.png')
-
-
-
-#for i, p in enumerate(pval_list):
-#     for j, val in enumerate(p):
-#         if val < 0.00001:
-#             coef_table.iloc[i,j] = '{:.2f}***'.format(coef_table.iloc[i,j])
-#         elif val < 0.0001:
-#             coef_table.iloc[i,j] = '{:.2f}**'.format(coef_table.iloc[i,j])
-       
-#         elif val < 0.001:
-#             coef_table.iloc[i,j] = '{:.2f}*'.format(coef_table.iloc[i,j])
-#         else:
-#             coef_table.iloc[i,j] = '{:.2f}'.format(coef_table.iloc[i,j])

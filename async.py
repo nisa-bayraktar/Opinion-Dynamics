@@ -37,6 +37,8 @@ def main_asynch():
             x_s = np.random.standard_normal() #opinion state
             G.nodes[n]["opinion_state"] = x_s
 
+         
+
             for j in list(G.neighbors(n)):
                 #print('setting weighjt', n_i, n_j)
                 w_n = np.random.uniform(0.0, np.nextafter(1,2)) # weights - WHAT ABOUT WEIGHT (5,5)?
@@ -70,7 +72,7 @@ def main_asynch():
                         avg = sum(G.nodes[j]["opinion_state"] * G[node][j]["weight"] for j in neighbours) / sum2
             
                         #calculate the node's new opinion state
-                        G.nodes[node]["opinion_state"] += conformity * (avg - G.nodes[node]["opinion_state"])  * dt
+                        G.nodes[node]["opinion_state"] += homophily * (avg - G.nodes[node]["opinion_state"])  * dt
             
                     #update the node's weight from its neighbourhood
                     for j in neighbours:
