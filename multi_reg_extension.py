@@ -18,28 +18,30 @@ print('matplotlib: {}'.format(matplotlib.__version__))
 # y_range = avg['range_of_comm_state']
 # y_num = avg['number_of_comm']
 # y_mod = avg['modularity']
-df = pd.read_csv("1000_network_start_uniform_5.csv")
+df = pd.read_csv("1000_network_choice.csv")
 
 X = df[['c_values','h_values','a_values']] 
 X['c:h'] = X['c_values'] * X['h_values']
 X['c:a'] = X['c_values'] * X['a_values']
 X['h:a'] = X['h_values'] * X['a_values']
 
-y_node_ecc = df['node_eccentricity']
-y_comm_op_ecc = df['community_opinion_eccentricity']
+y_global_ecc = df['global_node_eccentricity']
+y_local_ecc = df['local_node_eccentricity']
+y_comm_op_ecc = df['community_eccentricity']
 y_comm_size = df['community_size']
 
 
 X = sm.add_constant(X) 
 
 # Create a list of the y variables and corresponding est objects
-y_list = [y_node_ecc,y_comm_op_ecc,y_comm_size]
+y_list = [y_global_ecc,y_local_ecc,y_comm_op_ecc,y_comm_size]
 
 est_list = [sm.OLS(y, X).fit() for y in y_list ]
 
 coef_list = [est.params for est in est_list]
 pval_list = [est.pvalues for est in est_list]
-model_names = ['node_eccentricity', 'community_opinion_eccentricity','community_size']
+#print(pval_list)
+model_names = ['global_node_eccentricity','local_node_eccentricity', 'community_eccentricity','community_size']
 x_values =['c_values','h_values','a_values']
 
 
@@ -50,12 +52,12 @@ coef_table_c = coef_table.copy()
 
 for i, p in enumerate(pval_list):
     for j, val in enumerate(p):
-        if val < 0.00001:
+        if val < 0.005:
             coef_table_c.iloc[j,i] = '{:.2f}***'.format(coef_table_c.iloc[j,i])
-        elif val < 0.0001:
+        elif val < 0.05:
             coef_table_c.iloc[j,i] = '{:.2f}**'.format(coef_table_c.iloc[j,i])
        
-        elif val < 0.001:
+        elif val < 0.5:
             coef_table_c.iloc[j,i] = '{:.2f}*'.format(coef_table_c.iloc[j,i])
         else:
             coef_table_c.iloc[j,i] = '{:.2f}'.format(coef_table_c.iloc[j,i])
@@ -63,8 +65,8 @@ for i, p in enumerate(pval_list):
 max_values = coef_table.iloc[1:4].max()
 min_values = coef_table.iloc[1:4].min()
 
-print(max_values,min_values)
-print(coef_table)
+# print(max_values,min_values)
+# print(coef_table)
 
 fig, ax = plt.subplots(figsize=(10,5))
 ax.axis('off')
