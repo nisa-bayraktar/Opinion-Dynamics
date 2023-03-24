@@ -1,9 +1,8 @@
-
 import pandas as pd 
 import numpy as np
 from scipy.stats import ttest_1samp
 
-df = pd.read_csv("assortativity_choice.csv")
+df = pd.read_csv("assortativity_uniform.csv")
 
 
 for i in range(df.shape[1]):

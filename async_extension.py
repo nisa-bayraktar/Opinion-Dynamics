@@ -12,8 +12,8 @@ import itertools
 
 
 dt = 0.1
-t_h = 0.01
-t_a = 0.01
+t_h = 0.1
+t_a = 0.1
 
 
 
@@ -43,12 +43,12 @@ def main_asynch():
         G.nodes[n]["h"] = samples[1]
         G.nodes[n]["a"] = samples[2]
 
-        # # #random choice
+        # #random choice
         # G.nodes[n]["c"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
         # G.nodes[n]["h"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
         # G.nodes[n]["a"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
         
-        #random uniform distribution
+        # #random uniform distribution
         # random_c = np.random.uniform(0.01, 0.3 + 0.0001)
         # random_h = np.random.uniform(0.01, 0.3 + 0.0001)
         # random_a = np.random.uniform(0.01, 0.3 + 0.0001)
@@ -64,8 +64,6 @@ def main_asynch():
         #print('setting weighjt', n_i, n_j)
         w_n = np.random.uniform(0.0, np.nextafter(1,2)) # weights - WHAT ABOUT WEIGHT (5,5)?
         G[n_i][n_j]["weight"]= w_n
-    
-    # pickle.dump(G, open('1000_network_uniform_1', 'wb'))
 
     # t iterations
     for t in range (0,1000): 
@@ -102,38 +100,12 @@ def main_asynch():
 
 
             G.nodes[node]["opinion_state"] += epsilon
-    
-    
-
 
     
-    pickle.dump(G, open('1000_network_normal_4', 'wb'))
-    # for n in list(UG.nodes()):
-    #     dict_data = {'h_values': G.nodes[n]["h"],'a_values': G.nodes[n]["a"],'c_values':  G.nodes[n]["c"], 'th_values':t_h,'ta_values':t_a,'avg_weight': avg_weight, 'std_of_avg_comm_state':std_dev,  'range_of_comm_state': range_community, 'number_of_comm': n_communities,'modularity': modularity}
-    #     file_exists = os.path.isfile('async_extension.csv')
+    pickle.dump(G, open('1000_network_normal_1', 'wb'))
 
-    #     with open('async_extension.csv', mode='a') as csv_file:
-            
-    #             fieldnames = ['h_values','a_values','c_values','th_values','ta_values','avg_weight', 'std_of_avg_comm_state', 'range_of_comm_state', 'number_of_comm','modularity']
-    #             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-    #             if not file_exists:
-    #                 writer.writeheader() 
-    #             writer.writerow(dict_data)
-            
-    #         csv_file.close()
-
-#print(min_edge_weight,max_edge_weight)
-
-# def test():
-   
-#     lst = []
-#     for i in range(100):
-#         lst.append(i)
 
 if __name__ == "__main__":
     main_asynch()
-    #visualize_graph(G)
 
-    # For Python>=3.5 one can also write:
-    # print(timeit.timeit("test()", globals=locals()))
 
