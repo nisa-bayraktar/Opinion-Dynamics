@@ -10,7 +10,7 @@ import itertools
 import pickle as pickle
 import math as m
 
-G = pickle.load(open('uniform_network_0.01/1000_network_uniform_1', 'rb'))
+G = pickle.load(open('normal_network_0.03/1000_network_normal_10', 'rb'))
 
 set_ai = []
 set_hi = []
@@ -161,8 +161,8 @@ pearson_corr_ch = numerator_ch / denominator_ch
 pearson_corr_hc = numerator_hc / denominator_hc
 
 dict_data = {'pearson_corr_aa': pearson_corr_aa,'pearson_corr_hh': pearson_corr_hh,'pearson_corr_cc': pearson_corr_cc,'pearson_corr_ah': pearson_corr_ah,'pearson_corr_ha': pearson_corr_ha,'pearson_corr_ac': pearson_corr_ac,'pearson_corr_ca': pearson_corr_ca,'pearson_corr_ch':pearson_corr_ch,'pearson_corr_hc': pearson_corr_hc}
-file_exists = os.path.isfile('assortativity_uniform.csv')
-with open('assortativity_uniform.csv', mode='a') as csv_file:
+file_exists = os.path.isfile('assortativity_normal.csv')
+with open('assortativity_normal.csv', mode='a') as csv_file:
                 
                 fieldnames = ['pearson_corr_aa','pearson_corr_hh','pearson_corr_cc','pearson_corr_ah','pearson_corr_ha','pearson_corr_ac','pearson_corr_ca','pearson_corr_ch','pearson_corr_hc']
                 writer = csv.DictWriter(csv_file, fieldnames=fieldnames)

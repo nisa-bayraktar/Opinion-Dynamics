@@ -70,8 +70,11 @@ for i, p in enumerate(pval_list):
 max_values = coef_table.iloc[:6].max()
 min_values = coef_table.iloc[:6].min()
 
-print(max_values,min_values)
-print(coef_table)
+# print(max_values,min_values)
+# print(coef_table)
+# for est in est_list:
+#      print(est.summary())
+#      input('next')
 
 fig, ax = plt.subplots(figsize=(10,5))
 ax.axis('off')

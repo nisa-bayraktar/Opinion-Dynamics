@@ -72,7 +72,7 @@ def main_asynch():
                         avg = sum(G.nodes[j]["opinion_state"] * G[node][j]["weight"] for j in neighbours) / sum2
             
                         #calculate the node's new opinion state
-                        G.nodes[node]["opinion_state"] += homophily * (avg - G.nodes[node]["opinion_state"])  * dt
+                        G.nodes[node]["opinion_state"] += conformity * (avg - G.nodes[node]["opinion_state"])  * dt
             
                     #update the node's weight from its neighbourhood
                     for j in neighbours:
