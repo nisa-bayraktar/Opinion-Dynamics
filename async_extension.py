@@ -43,20 +43,20 @@ def main_asynch():
         # G.nodes[n]["h"] = samples[1]
         # G.nodes[n]["a"] = samples[2]
 
-        # #random choice
-        # G.nodes[n]["c"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
-        # G.nodes[n]["h"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
-        # G.nodes[n]["a"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
+        #random choice
+        G.nodes[n]["c"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
+        G.nodes[n]["h"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
+        G.nodes[n]["a"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
         
-        #random uniform distribution
-        random_c = np.random.uniform(0.01, 0.3 + 0.0001)
-        random_h = np.random.uniform(0.01, 0.3 + 0.0001)
-        random_a = np.random.uniform(0.01, 0.3 + 0.0001)
+        # #random uniform distribution
+        # random_c = np.random.uniform(0.01, 0.3 + 0.0001)
+        # random_h = np.random.uniform(0.01, 0.3 + 0.0001)
+        # random_a = np.random.uniform(0.01, 0.3 + 0.0001)
 
     
-        G.nodes[n]["c"] = np.clip(random_c,0.01, 0.3)
-        G.nodes[n]["h"] = np.clip(random_h,0.01, 0.3)
-        G.nodes[n]["a"] = np.clip(random_a,0.01, 0.3)
+        # G.nodes[n]["c"] = np.clip(random_c,0.01, 0.3)
+        # G.nodes[n]["h"] = np.clip(random_h,0.01, 0.3)
+        # G.nodes[n]["a"] = np.clip(random_a,0.01, 0.3)
         
 
 
@@ -102,7 +102,7 @@ def main_asynch():
             G.nodes[node]["opinion_state"] += epsilon
 
     
-    pickle.dump(G, open('1000_network_uniform_6', 'wb'))
+    pickle.dump(G, open('1000_network_choice_10', 'wb'))
 
 
 if __name__ == "__main__":

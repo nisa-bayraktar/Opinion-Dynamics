@@ -7,12 +7,12 @@ import statsmodels.formula.api as smf
 import matplotlib
 
 
-df = pd.read_csv("1000_network_normal_0.03.csv")
+df = pd.read_csv("1000_network_combined_0.03.csv")
 
 X = df[['c_values','h_values','a_values']] 
-# X['c:h'] = X['c_values'] * X['h_values']
-# X['c:a'] = X['c_values'] * X['a_values']
-# X['h:a'] = X['h_values'] * X['a_values']
+X['c:h'] = X['c_values'] * X['h_values']
+X['c:a'] = X['c_values'] * X['a_values']
+X['h:a'] = X['h_values'] * X['a_values']
 
 y_global_ecc = df['global_node_eccentricity']
 y_within_ecc = df['within_community_eccentricity']
@@ -40,47 +40,47 @@ coef_table = pd.DataFrame(data=coef_list, columns=X.columns, index=model_names)
 coef_table = coef_table.T
 #copy the coef table to put starts, because using the actual table for both colouring the min-max values with stars does not work
 coef_table_c = coef_table.copy()
-print(coef_list)
 
-# for i, p in enumerate(pval_list):
-#     print(i,p)
-#     for j, val in enumerate(p):
-#         print(j,val)
-#         if val < 0.0001:
-#             coef_table_c.iloc[j,i] = '{:.2f}***'.format(coef_table_c.iloc[j,i])
-#         elif val < 0.001:
-#             coef_table_c.iloc[j,i] = '{:.2f}**'.format(coef_table_c.iloc[j,i])
+
+for i, p in enumerate(pval_list):
+    print(i,p)
+    for j, val in enumerate(p):
+        print(j,val)
+        if val < 0.0001:
+            coef_table_c.iloc[j,i] = '{:.2f}***'.format(coef_table_c.iloc[j,i])
+        elif val < 0.001:
+            coef_table_c.iloc[j,i] = '{:.2f}**'.format(coef_table_c.iloc[j,i])
        
-#         elif val < 0.01:
-#             coef_table_c.iloc[j,i] = '{:.2f}*'.format(coef_table_c.iloc[j,i])
-#         else:
-#             coef_table_c.iloc[j,i] = '{:.2f}'.format(coef_table_c.iloc[j,i])
+        elif val < 0.01:
+            coef_table_c.iloc[j,i] = '{:.2f}*'.format(coef_table_c.iloc[j,i])
+        else:
+            coef_table_c.iloc[j,i] = '{:.2f}'.format(coef_table_c.iloc[j,i])
 
-# max_values = coef_table.iloc[1:4].max()
-# min_values = coef_table.iloc[1:4].min()
+max_values = coef_table.iloc[1:4].max()
+min_values = coef_table.iloc[1:4].min()
 
-# # for est in est_list:
-# #      print(est.summary())
-# #      input('next')
-
-
-# fig, ax = plt.subplots(figsize=(10,5))
-# ax.axis('off')
-# ax.axis('tight')
-
-# table=ax.table(cellText=coef_table_c.values, colLabels=coef_table_c.columns, cellLoc='center',rowLabels=coef_table_c.index, loc='center')
-# fontsize = 12
-# table.set_fontsize(fontsize)
-
-# # Set the color of the text in the cells
-# for j in range(1, coef_table_c.shape[0] +1):
-#     for i in range(coef_table_c.shape[1]):
-#         if coef_table.iloc[j - 1, i] == max_values[i]:
-#             table[(j, i)].get_text().set_color('red')
-#         elif coef_table.iloc[j - 1, i] == min_values[i]:
-#             table[(j, i)].get_text().set_color('blue')
+# for est in est_list:
+#      print(est.summary())
+#      input('next')
 
 
-# table.scale(1, 1)
-# #plt.show()
+fig, ax = plt.subplots(figsize=(10,5))
+ax.axis('off')
+ax.axis('tight')
+
+table=ax.table(cellText=coef_table_c.values, colLabels=coef_table_c.columns, cellLoc='center',rowLabels=coef_table_c.index, loc='center')
+fontsize = 12
+table.set_fontsize(fontsize)
+
+# Set the color of the text in the cells
+for j in range(1, coef_table_c.shape[0] +1):
+    for i in range(coef_table_c.shape[1]):
+        if coef_table.iloc[j - 1, i] == max_values[i]:
+            table[(j, i)].get_text().set_color('red')
+        elif coef_table.iloc[j - 1, i] == min_values[i]:
+            table[(j, i)].get_text().set_color('blue')
+
+
+table.scale(1, 1)
+plt.show()
     

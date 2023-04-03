@@ -10,7 +10,7 @@ import itertools
 import pickle as pickle
 
 
-G = pickle.load(open('normal_network_0.03/1000_network_normal_10', 'rb'))
+G = pickle.load(open('uniform_network_0.03/1000_network_uniform_10', 'rb'))
 
 UG = G.to_undirected()
 for node in list(G.nodes()):
@@ -60,9 +60,9 @@ for i in range (len(a)):
 
 for n in range (len(UG.nodes)):
         dict_data = {'h_values': UG.nodes[n]["h"],'a_values': UG.nodes[n]["a"],'c_values':  UG.nodes[n]["c"],'global_node_eccentricity': UG.nodes[n]["global_eccentricity"],'within_community_eccentricity': UG.nodes[n]["within_community_eccentricity"],'community_eccentricity': UG.nodes[n]["community_eccentricity"],'community_size':UG.nodes[n]["community_size"]}
-        file_exists = os.path.isfile('1000_network_normal_0.03.csv')
+        file_exists = os.path.isfile('1000_network_combined_0.03.csv')
 
-        with open('1000_network_normal_0.03.csv', mode='a') as csv_file:
+        with open('1000_network_combined_0.03.csv', mode='a') as csv_file:
             
                 fieldnames = ['h_values','a_values','c_values','global_node_eccentricity','within_community_eccentricity','community_eccentricity','community_size']
                 writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
