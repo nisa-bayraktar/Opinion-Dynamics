@@ -1,4 +1,4 @@
-h_values,a_values,c_values,th_values,ta_values,avg_weight,std_of_avg_comm_state,range_of_comm_state,number_of_comm,modularity
+h,a,c,theta_h,theta_a,average edge weight,std. of average comm. states,range of average comm. states,number of communities,modularity
 0.01,0.01,0.01,0.01,0.01,0.2704698615655409,1.9372894275819441,4.62584916466873,3,0.19417420228431442
 0.01,0.01,0.01,0.01,0.03,0.2546923932565257,1.979924986961355,4.830050389586475,3,0.21412652116988273
 0.01,0.01,0.01,0.01,0.1,0.21402541010334783,1.5740407528540872,3.6024399524659705,3,0.1959330955030648

@@ -7,7 +7,7 @@ import statsmodels.formula.api as smf
 import matplotlib
 
 
-df = pd.read_csv("1000_network_combined_0.03.csv")
+df = pd.read_csv("new_1000_network_choice_0.03.csv")
 
 X = df[['c_values','h_values','a_values']] 
 X['c:h'] = X['c_values'] * X['h_values']

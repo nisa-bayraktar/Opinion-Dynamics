@@ -10,7 +10,8 @@ import itertools
 import pickle as pickle
 import math as m
 
-G = pickle.load(open('normal_network_0.03/1000_network_normal_10', 'rb'))
+G = pickle.load(open('new_choice_network_0.03/new_1000_network_choice_10', 'rb'))
+
 
 set_ai = []
 set_hi = []
@@ -30,6 +31,7 @@ set_w_cj = []
 
 set_wij = [] 
 sum_w = 0
+
 for i,j,d in G.edges(data=True):
     #all the weights in the graph
     sum_w += d['weight']
@@ -161,8 +163,8 @@ pearson_corr_ch = numerator_ch / denominator_ch
 pearson_corr_hc = numerator_hc / denominator_hc
 
 dict_data = {'pearson_corr_aa': pearson_corr_aa,'pearson_corr_hh': pearson_corr_hh,'pearson_corr_cc': pearson_corr_cc,'pearson_corr_ah': pearson_corr_ah,'pearson_corr_ha': pearson_corr_ha,'pearson_corr_ac': pearson_corr_ac,'pearson_corr_ca': pearson_corr_ca,'pearson_corr_ch':pearson_corr_ch,'pearson_corr_hc': pearson_corr_hc}
-file_exists = os.path.isfile('assortativity_normal.csv')
-with open('assortativity_normal.csv', mode='a') as csv_file:
+file_exists = os.path.isfile('new_assortativity_choice.csv')
+with open('new_assortativity_choice.csv', mode='a') as csv_file:
                 
                 fieldnames = ['pearson_corr_aa','pearson_corr_hh','pearson_corr_cc','pearson_corr_ah','pearson_corr_ha','pearson_corr_ac','pearson_corr_ca','pearson_corr_ch','pearson_corr_hc']
                 writer = csv.DictWriter(csv_file, fieldnames=fieldnames)

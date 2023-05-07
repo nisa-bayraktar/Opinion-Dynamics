@@ -23,9 +23,9 @@ def main_asynch():
 
 
         #random initializations
-    for n in list(G.nodes()):
+    for node in list(G.nodes()):
         x_s = np.random.standard_normal() #opinion state
-        G.nodes[n]["opinion_state"] = x_s
+        G.nodes[node]["opinion_state"] = x_s
 
         # #random normal distribution
         # lower_bound = 0.01
@@ -39,14 +39,14 @@ def main_asynch():
         #         sample = np.random.normal(loc=mean, scale=std_dev, size=1)[0]
         #     samples.append(sample)
 
-        # G.nodes[n]["c"] = samples[0]
-        # G.nodes[n]["h"] = samples[1]
-        # G.nodes[n]["a"] = samples[2]
+        # G.nodes[node]["c"] = samples[0]
+        # G.nodes[node]["h"] = samples[1]
+        # G.nodes[node]["a"] = samples[2]
 
         #random choice
-        G.nodes[n]["c"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
-        G.nodes[n]["h"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
-        G.nodes[n]["a"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
+        G.nodes[node]["c"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
+        G.nodes[node]["h"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
+        G.nodes[node]["a"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
         
         # #random uniform distribution
         # random_c = np.random.uniform(0.01, 0.3 + 0.0001)
@@ -54,9 +54,9 @@ def main_asynch():
         # random_a = np.random.uniform(0.01, 0.3 + 0.0001)
 
     
-        # G.nodes[n]["c"] = np.clip(random_c,0.01, 0.3)
-        # G.nodes[n]["h"] = np.clip(random_h,0.01, 0.3)
-        # G.nodes[n]["a"] = np.clip(random_a,0.01, 0.3)
+        # G.nodes[node]["c"] = np.clip(random_c,0.01, 0.3)
+        # G.nodes[node]["h"] = np.clip(random_h,0.01, 0.3)
+        # G.nodes[node]["a"] = np.clip(random_a,0.01, 0.3)
         
 
 
@@ -84,15 +84,15 @@ def main_asynch():
                     avg = sum(G.nodes[j]["opinion_state"] * G[node][j]["weight"] for j in neighbours) / sum2
         
                     #calculate the node's new opinion state
-                    G.nodes[node]["opinion_state"] += G.nodes[n]["c"] * (avg - G.nodes[node]["opinion_state"])  * dt
+                    G.nodes[node]["opinion_state"] += G.nodes[node]["c"] * (avg - G.nodes[node]["opinion_state"])  * dt
         
                 #update the node's weight from its neighbourhood
                 for j in neighbours:
                     dif = abs(G.nodes[node]["opinion_state"] - G.nodes[j]["opinion_state"])
-                    G[node][j]["weight"] += G.nodes[n]["h"] * (t_h - dif)  * dt
+                    G[node][j]["weight"] += G.nodes[node]["h"] * (t_h - dif)  * dt
                     if sum2>0:
                         dif = abs(avg - G.nodes[j]["opinion_state"]) 
-                        G[node][j]["weight"] +=  G.nodes[n]["a"] * (dif - t_a) * dt
+                        G[node][j]["weight"] +=  G.nodes[node]["a"] * (dif - t_a) * dt
 
                     if G[node][j]['weight'] < 0:
                         G[node][j]['weight'] = 0
@@ -102,7 +102,7 @@ def main_asynch():
             G.nodes[node]["opinion_state"] += epsilon
 
     
-    pickle.dump(G, open('1000_network_choice_10', 'wb'))
+    pickle.dump(G, open('new_1000_network_choice_10', 'wb'))
 
 
 if __name__ == "__main__":

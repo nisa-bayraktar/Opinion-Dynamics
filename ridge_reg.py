@@ -16,7 +16,7 @@ from sklearn.model_selection import cross_val_score
 import matplotlib
 
 
-df = pd.read_csv("1000_network_combined_0.03.csv")
+df = pd.read_csv("10_network_normal_0.03.csv")
 
 X = df[['c_values','h_values','a_values']]
 X['c:h'] = X['c_values'] * X['h_values']
