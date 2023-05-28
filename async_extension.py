@@ -27,36 +27,36 @@ def main_asynch():
         x_s = np.random.standard_normal() #opinion state
         G.nodes[node]["opinion_state"] = x_s
 
-        # #random normal distribution
-        # lower_bound = 0.01
-        # upper_bound = 0.3
-        # mean = (lower_bound + upper_bound) / 2
-        # std_dev = (upper_bound - lower_bound) / 6
-        # samples = []
-        # for i in range(3):
-        #     sample = np.random.normal(loc=mean, scale=std_dev, size=1)[0]
-        #     while sample < lower_bound or sample > upper_bound:
-        #         sample = np.random.normal(loc=mean, scale=std_dev, size=1)[0]
-        #     samples.append(sample)
+        #random normal distribution
+        lower_bound = 0.01
+        upper_bound = 0.3
+        mean = (lower_bound + upper_bound) / 2
+        std_dev = (upper_bound - lower_bound) / 6
+        samples = []
+        for i in range(3):
+            sample = np.random.normal(loc=mean, scale=std_dev, size=1)[0]
+            while sample < lower_bound or sample > upper_bound:
+                sample = np.random.normal(loc=mean, scale=std_dev, size=1)[0]
+            samples.append(sample)
 
-        # G.nodes[node]["c"] = samples[0]
-        # G.nodes[node]["h"] = samples[1]
-        # G.nodes[node]["a"] = samples[2]
+        G.nodes[node]["c"] = samples[0]
+        G.nodes[node]["h"] = samples[1]
+        G.nodes[node]["a"] = samples[2]
 
         #random choice
         G.nodes[node]["c"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
         G.nodes[node]["h"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
         G.nodes[node]["a"] = np.random.choice([0.01, 0.03, 0.1, 0.3])
         
-        # #random uniform distribution
-        # random_c = np.random.uniform(0.01, 0.3 + 0.0001)
-        # random_h = np.random.uniform(0.01, 0.3 + 0.0001)
-        # random_a = np.random.uniform(0.01, 0.3 + 0.0001)
+        #random uniform distribution
+        random_c = np.random.uniform(0.01, 0.3 + 0.0001)
+        random_h = np.random.uniform(0.01, 0.3 + 0.0001)
+        random_a = np.random.uniform(0.01, 0.3 + 0.0001)
 
     
-        # G.nodes[node]["c"] = np.clip(random_c,0.01, 0.3)
-        # G.nodes[node]["h"] = np.clip(random_h,0.01, 0.3)
-        # G.nodes[node]["a"] = np.clip(random_a,0.01, 0.3)
+        G.nodes[node]["c"] = np.clip(random_c,0.01, 0.3)
+        G.nodes[node]["h"] = np.clip(random_h,0.01, 0.3)
+        G.nodes[node]["a"] = np.clip(random_a,0.01, 0.3)
         
 
 

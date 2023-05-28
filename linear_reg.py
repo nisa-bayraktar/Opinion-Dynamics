@@ -73,7 +73,7 @@ for j, X in enumerate(X_values):
     set_avg(X)
     for i, y in enumerate(y_values):
         slope, intercept, r_value, p_value, std_err = linregress(X, avg[y])
-        if p_value < 0.00003:
+        if p_value < 0.00001 or p_value < 0.00002:
             y_pred = slope * X + intercept
             axs[i,j].scatter(X, avg[y], color='blue', alpha=0.02)
             axs[i,j].plot(X, y_pred, color='red')
@@ -90,12 +90,10 @@ for j, X in enumerate(X_values):
             axs[i,j].set_xscale("log")
             axs[i,j].set_xticks([0.01, 0.03, 0.1, 0.3])
             axs[i,j].set_xticklabels([0.01, 0.03, 0.1, 0.3])
-            # axs[i,j].text(0.95, 0.95, 'p < 0.00001', transform=axs[i,j].transAxes,
-            #               verticalalignment='top', horizontalalignment='right',
-            #               fontsize=8, color='black')
+       
            
      
 plt.tight_layout()
-plt.savefig('linear_reg_5.png')
+plt.savefig('linear_reg.png')
 
 

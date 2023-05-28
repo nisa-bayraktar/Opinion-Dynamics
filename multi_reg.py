@@ -6,18 +6,7 @@ import statsmodels.formula.api as smf
 import matplotlib
 print('matplotlib: {}'.format(matplotlib.__version__))
 
-# df = pd.read_csv("async.csv")
-# grouped = df.groupby(['c','h','a','theta_h','theta_a'])
 
-# avg =  grouped.mean()
-# avg = avg.reset_index()
-
-# X = avg[['c','h','a','theta_h','theta_a']] 
-# y_weight = avg['average edge weight']
-# y_std = avg['std. of average comm. states']
-# y_range = avg['range of average comm. states']
-# y_num = avg['number of communities']
-# y_mod = avg['modularity']
 df = pd.read_csv("async_1.csv")
 
 X = df[['c','h','a','theta_h','theta_a']] 
@@ -89,11 +78,6 @@ for j in range(1, coef_table_c.shape[0] +1):
             table[(j, i)].get_text().set_color('red')
         elif coef_table.iloc[j - 1, i] == min_values[i]:
             table[(j, i)].get_text().set_color('blue')
-# create a new table with interaction values
-# for i in range(coef_table_c.shape[1]):
-#     table[(0, i)].set_edgecolor('red') 
-#     table[(5, i)].set_edgecolor('red') 
-#     table[(coef_table_c.shape[0]-1, i)].set_edgecolor('blue')
 
 
 table.scale(1, 1)

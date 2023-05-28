@@ -22,10 +22,10 @@ values = [0.01,0.03,0.1,0.3]
 
 def main_asynch():
 
-    G = nx.DiGraph(nx.complete_graph(1000))
+    G = nx.DiGraph(nx.complete_graph(100))
 
-    max_edge_weight = 0
-    min_edge_weight = 0
+    #max_edge_weight = 0
+    #min_edge_weight = 0
 
     parameters = [0, 0, 0, 0, 0]
 
@@ -105,10 +105,10 @@ def main_asynch():
         avg_weight = s / len(list(UG.edges))
         #print(avg_weight)
 
-        if avg_weight > max_edge_weight:
-            max_edge_weight = avg_weight 
-        if avg_weight < min_edge_weight:
-            min_edge_weight = avg_weight 
+        # if avg_weight > max_edge_weight:
+        #     max_edge_weight = avg_weight 
+        # if avg_weight < min_edge_weight:
+        #     min_edge_weight = avg_weight 
 
         #find the communities of the graph
         a=nx_comm.louvain_communities(UG)
@@ -142,20 +142,20 @@ def main_asynch():
        
             
 
-        dict_data = {'h_values':homophily,'a_values':novelty,'c_values': conformity,'th_values':t_h,'ta_values':t_a,'avg_weight': avg_weight, 'std_of_avg_comm_state':std_dev,  'range_of_comm_state': range_community, 'number_of_comm': n_communities,'modularity': modularity}
-        file_exists = os.path.isfile('async_1000.csv')
+        dict_data = {'h':homophily,'a':novelty,'c': conformity,'theta_h':t_h,'theta_a':t_a,'average edge weight': avg_weight, 'std. of average comm. states':std_dev,  'range of average comm. states': range_community, 'number of communities': n_communities,'modularity': modularity}
+        file_exists = os.path.isfile('async.csv')
 
-        with open('async_1000.csv', mode='a') as csv_file:
+        with open('async.csv', mode='a') as csv_file:
             
-                fieldnames = ['h_values','a_values','c_values','th_values','ta_values','avg_weight', 'std_of_avg_comm_state', 'range_of_comm_state', 'number_of_comm','modularity']
+                fieldnames = ['h','a','c','theta_h','theta_a','average edge weight', 'std. of average comm. states', 'range of average comm. states', 'number of communities','modularity']
                 writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
                 if not file_exists:
                     writer.writeheader() 
                 writer.writerow(dict_data)
                 
-        #         csv_file.close()
+    
 
-    print(min_edge_weight,max_edge_weight)
+   #print(min_edge_weight,max_edge_weight)
 
 # def test():
    

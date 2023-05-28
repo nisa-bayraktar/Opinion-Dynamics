@@ -21,7 +21,8 @@ for node in list(G.nodes()):
                 (G.edges[node, neighbour]["weight"] + G.edges[neighbour, node]["weight"])/2
             )
    
-avg_op = sum(UG.nodes[node]["opinion_state"]for node in list(UG.nodes)) / len(list(UG.nodes))
+avg_op_node = sum(UG.nodes[node]["opinion_state"]for node in list(UG.nodes)) 
+avg_op = avg_op_node / len(list(UG.nodes))
 nodes = list(UG.nodes)
 
 for node in nodes:
@@ -30,14 +31,7 @@ for node in nodes:
 
     # two idea: global eccentricity .. abs difference between node opinion and average network opinion
     UG.nodes[node]["global_eccentricity"] = global_ecc
-    # for j in neighbours:
-    #     if UG.edges[node,j]["weight"] != 0:
-    #         sum_neighbours = sum(UG.nodes[j]["opinion_state"]for j in neighbours)
-    #         avg_n_os = sum_neighbours / len(neighbours)
-    #         local_ecc = abs(UG.nodes[node]["opinion_state"] - avg_n_os)
    
-    # # one idea: local eccentricity .. abs difference between node opinion and avg community opinion
-    # UG.nodes[node]["local_eccentricity"] = local_ecc
        
 #find the communities of the graph
 a=nx_comm.louvain_communities(UG)
@@ -53,7 +47,7 @@ for i in range (len(a)):
     com_ecc= abs(average_opinion_state - avg_op)
     
     for n in a[i]:
-        # here we could assign community eccentricity score to node "node"  
+       
         UG.nodes[n]["community_eccentricity"]= com_ecc
         UG.nodes[n]["within_community_eccentricity"]= abs(UG.nodes[n]["opinion_state"] - average_opinion_state)
 

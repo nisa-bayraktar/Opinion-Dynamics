@@ -7,7 +7,7 @@ import statsmodels.formula.api as smf
 import matplotlib
 
 
-df = pd.read_csv("new_1000_network_choice_0.03.csv")
+df = pd.read_csv("new_1000_network_uniform_0.03.csv")
 
 X = df[['c_values','h_values','a_values']] 
 X['c:h'] = X['c_values'] * X['h_values']
@@ -59,9 +59,6 @@ for i, p in enumerate(pval_list):
 max_values = coef_table.iloc[1:4].max()
 min_values = coef_table.iloc[1:4].min()
 
-# for est in est_list:
-#      print(est.summary())
-#      input('next')
 
 
 fig, ax = plt.subplots(figsize=(10,5))
@@ -81,6 +78,8 @@ for j in range(1, coef_table_c.shape[0] +1):
             table[(j, i)].get_text().set_color('blue')
 
 
-table.scale(1, 1)
-plt.show()
-    
+# table.scale(1, 1)
+# plt.show()
+     
+plt.tight_layout()
+plt.savefig('multi_reg_uniform.png')
