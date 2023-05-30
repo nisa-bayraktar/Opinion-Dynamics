@@ -17,7 +17,7 @@ attributes = ['c', 'h', 'a']
 combinations = [(X, Y) for X in attributes for Y in attributes]
 
 dict_data = {}
-with open('NEW_normal_assortativity.csv', mode='w') as csv_file:
+with open('NEW_normal_assortativity_1.csv', mode='w') as csv_file:
     fieldnames = ['XY', 'assortativity']
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     writer.writeheader()  # write the header row

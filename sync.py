@@ -67,7 +67,7 @@ def main_synch():
                 for node in list(G):
                     epsilon = np.random.normal(0,0.1)
 
-                    if list(G.neighbors(node)) != []: # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
+                    if list(G.neighbors(node)) != []: 
                         sum1 = 0
                         sum2 = 0
                         for j in G.neighbors(node):
