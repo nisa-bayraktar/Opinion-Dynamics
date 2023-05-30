@@ -29,7 +29,7 @@ for i in range(num_cont):
         x = bar.get_x() + bar.get_width() / 2
         y = bar.get_height()
         ax.errorbar(x, y, yerr=std_err[i], capsize=8, color='black')
-        t_value = (y / std_err[i]) - 0 
+        t_value = (y - 0  / std_err[i]) 
         if abs(t_value) >= 2.821:  # Check condition for asterisk
             ax.text(x +0.05, y, "*", ha='center', va='bottom', fontsize=14, fontweight = 'bold', color='blue')
         elif abs(t_value) >= 4.297:  # Check condition for asterisk
@@ -42,4 +42,6 @@ ax.tick_params(axis='x', labelsize=14)
 ax.legend(title=None, prop={'size': 14, 'style': 'italic'})
 
 
-plt.show()
+#plt.show()
+plt.tight_layout()
+plt.savefig('assortativity.png')

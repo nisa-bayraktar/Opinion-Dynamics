@@ -24,8 +24,6 @@ def main_asynch():
 
     G = nx.DiGraph(nx.complete_graph(100))
 
-    #max_edge_weight = 0
-    #min_edge_weight = 0
 
     parameters = [0, 0, 0, 0, 0]
 
@@ -63,9 +61,8 @@ def main_asynch():
                 neighbours = list(G.neighbors(node))
                 epsilon = np.random.normal(0,0.1)
                 
-                # calculate the average neighbourhood of the node
-                if len(neighbours)>0: # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
-                    
+                
+                if len(neighbours)>0: 
                     
                     sum2 = sum(G[node][j]["weight"]for j in neighbours)
                     if sum2>0:
@@ -103,13 +100,7 @@ def main_asynch():
         #calculate the average weight of all edges
         s = sum(UG.edges[node, neighbour]["weight"] for node, neighbour in UG.edges)
         avg_weight = s / len(list(UG.edges))
-        #print(avg_weight)
-
-        # if avg_weight > max_edge_weight:
-        #     max_edge_weight = avg_weight 
-        # if avg_weight < min_edge_weight:
-        #     min_edge_weight = avg_weight 
-
+   
         #find the communities of the graph
         a=nx_comm.louvain_communities(UG)
       
@@ -118,7 +109,7 @@ def main_asynch():
         #number of communities
         n_communities = len(a)
             
-        #calculate the modularity of the community
+        #calculate the modularity of the communities
         modularity = nx_comm.modularity(UG,a)
       
         average_opinion_states = []
@@ -137,7 +128,7 @@ def main_asynch():
       
         std_dev = np.std(average_opinion_states)
                 
-        #calcuate the range of opinion states
+        #calcuate the range of community opinion states
         range_community = max(average_opinion_states) - min(average_opinion_states)
        
             
@@ -153,20 +144,7 @@ def main_asynch():
                     writer.writeheader() 
                 writer.writerow(dict_data)
                 
-    
-
-   #print(min_edge_weight,max_edge_weight)
-
-# def test():
-   
-#     lst = []
-#     for i in range(100):
-#         lst.append(i)
 
 if __name__ == "__main__":
     main_asynch()
-    #visualize_graph(G)
-
-    # For Python>=3.5 one can also write:
-    # print(timeit.timeit("test()", globals=locals()))
-
+  

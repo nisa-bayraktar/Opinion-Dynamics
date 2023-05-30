@@ -73,7 +73,7 @@ for j, X in enumerate(X_values):
     set_avg(X)
     for i, y in enumerate(y_values):
         slope, intercept, r_value, p_value, std_err = linregress(X, avg[y])
-        if p_value < 0.00001 or p_value < 0.00002:
+        if p_value < 0.00001 or p_value == 0.00002:
             y_pred = slope * X + intercept
             axs[i,j].scatter(X, avg[y], color='blue', alpha=0.02)
             axs[i,j].plot(X, y_pred, color='red')

@@ -61,8 +61,8 @@ def main_asynch():
 
 
     for n_i,n_j in G.edges():
-        #print('setting weighjt', n_i, n_j)
-        w_n = np.random.uniform(0.0, np.nextafter(1,2)) # weights - WHAT ABOUT WEIGHT (5,5)?
+        
+        w_n = np.random.uniform(0.0, np.nextafter(1,2)) 
         G[n_i][n_j]["weight"]= w_n
 
     # t iterations
@@ -76,7 +76,7 @@ def main_asynch():
             epsilon = np.random.normal(0,0.1)
             
             # calculate the average neighbourhood of the node
-            if len(neighbours)>0: # what happens ıf node has no neıghbours (all weıghts ınto node are equal to zero)?
+            if len(neighbours)>0: 
                 
                 
                 sum2 = sum(G[node][j]["weight"]for j in neighbours)

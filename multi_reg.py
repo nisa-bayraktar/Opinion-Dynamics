@@ -80,6 +80,7 @@ for j in range(1, coef_table_c.shape[0] +1):
             table[(j, i)].get_text().set_color('blue')
 
 
-table.scale(1, 1)
-plt.show()
+
+plt.tight_layout()
+plt.savefig('multi_reg.png')
     
